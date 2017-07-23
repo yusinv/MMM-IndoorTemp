@@ -1,9 +1,11 @@
 'use strict';
 
 /* Magic Mirror
- * Module: MMM-mqtt
+ * Module: MMM-IndoorTemp
  *
- * By Javier Ayala http://www.javierayala.com/
+ * By Sebastian Hodapp https://www.sebastian-hodapp.de,
+ *
+ * based on Javier Ayala's module MMM-mqtt http://www.javierayala.com/
  * MIT Licensed.
  */
 
@@ -12,7 +14,7 @@ var mqtt = require('mqtt');
 
 module.exports = NodeHelper.create({
   start: function() {
-    console.log('MMM-mqtt started ...');
+    console.log('MMM-IndoorTemp started ...');
   },
 
   getMqtt: function(payload) {

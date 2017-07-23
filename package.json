@@ -1,25 +1,26 @@
 {
-  "name": "mmm-mqtt",
-  "version": "0.1.0",
-  "description": "MQTT Module for MagicMirror",
-  "main": "index.js",
+  "name": "mmm-indoortemp",
+  "version": "1.0.0",
+  "description": "MQTT Module for MagicMirror to emit INDOOR_TEMPERATURE",
+  "main": "MMM-IndoorTemp.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/javiergayala/MMM-mqtt.git"
+    "url": "git+https://github.com/sebastianhodapp/MMM-indoortemp.git"
   },
   "keywords": [
     "MagicMirror",
-    "mqtt"
+    "mqtt",
+    "INDOOR_TEMPERATURE"
   ],
-  "author": "Javier Ayala",
+  "author": "Sebastian Hodapp",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/javiergayala/MMM-mqtt/issues"
+    "url": "https://github.com/sebastianhodapp/MMM-indoortemp/issues"
   },
-  "homepage": "https://github.com/javiergayala/MMM-mqtt#readme",
+  "homepage": "https://github.com/sebastianhodapp/MMM-indoortemp#readme",
   "dependencies": {
     "mqtt": "^1.10.0"
   }

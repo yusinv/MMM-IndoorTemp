@@ -1,21 +1,23 @@
-# MMM-mqtt
+# MMM-IndoorTemp
 
-This is an extension for the [MagicMirror²](https://github.com/MichMich/MagicMirror).  It provides the ability to subscribe to MQTT topics and display them.
+This is an extension for the [MagicMirror²](https://github.com/MichMich/MagicMirror).  It emits the notification "INDOOR_TEMPERATURE" to display the indoor temperature received via a subscribed MQTT topic. The module is based on Javier Ayala's module [MMM-mqtt](https://github.com/javiergayala/MMM-mqtt).
 
-## Installation
+It's working with every temperatur MQTT topic. If you're looking for a sensor, you can easily start with a WeMos D1 mini in combination with a DHT Shield and the firmware based on Homie. You can find it in the other folders.
+
+## MagicMirror Module Installation
 1. Ensure that you have the necessary libraries/clients for mqtt installed on the computer that will be running this extension.  (For example, running `sudo apt-get install mosquitto mosquitto-clients` on Debian-based distributions.)
-2. Navigate into your MagicMirror's `modules` folder and execute `git clone https://github.com/javiergayala/MMM-mqtt.git`. A new folder will appear, likely called `MMM-mqtt`.  Navigate into it.
+2. Install  [mqtt](https://www.npmjs.com/package/mqtt) via `npm install mqtt`.
+3. Navigate into your MagicMirror's `modules` folder and execute `git clone https://github.com/sebastianhodapp/MMM-IndoorTemp.git`. A new folder will appear, likely called `MMM-IndoorTemp`.  Navigate into it.
 3. Execute `npm install` to install the node dependencies.
 
 ## Using the module
-
 To use this module, add it to the modules array in the `config/config.js` file:
 ````javascript
 modules: [
 	{
-		module: 'MMM-mqtt',
-		position: 'top_right',	// This can be any of the regions. Best results in left or right regions.
-		header: 'Living Room Temperature', // This is optional
+		module: 'MMM-IndoorTemp',
+		position: 'top_right',							// This can be any of the regions..
+		header: 'Living Room Temperature', 	// This is optional and only needed if you want to display the temperature
 		config: {
 			// See 'Configuration options' for more information.
 		}
@@ -30,12 +32,14 @@ The following options can be configured:
 | Option  | Description  |
 |---|---|
 | `mqttServer`  | Connection string for the server to connect to (`mqtt://localhost`)  |
-| `loadingText`  | Text to display while waiting for data to load  |
 | `topic`  | MQTT Topic to subscribe to on the server (`sensors/temperature/livingroom`)  |
+| `interval`  | Refresh interval, not including MQTT subscription deliveries. (default: `300000`)  |
+| `debug`  | Do you want to see the received information in a seperate module posiiton?. (default: false)  |
+| `showAlerts`  | Should Alerst in case of connection issues with the broker be shown??. (default: true)  |
 | `showTitle`  | Boolean to show/hide a title (default: `false`)  |
 | `title`  | Title to show if `showTitle` is `true`  |
-| `interval`  | Refresh interval, not including MQTT subscription deliveries. (default: `300000`)  |
 | `postText`  | Text to append after the data received from MQTT (default: `''`)  |
+
 
 ## Known Limitations
 - Currently only supports unencrypted/unauthenticated MQTT connections.  
@@ -49,7 +53,7 @@ Contributions of all kinds are welcome, not only in the form of code but also wi
 
 Please keep the following in mind:
 
-- **Bug Reports**:  Make sure you're running the latest version. If the issue(s) still persist: please open a clearly documented issue with a clear title. 
+- **Bug Reports**:  Make sure you're running the latest version. If the issue(s) still persist: please open a clearly documented issue with a clear title.
 - **Minor Bug Fixes**: Please send a pull request with a clear explanation of the issue or a link to the issue it solves.
 - **Major Bug Fixes**: please discuss your approach in an GitHub issue before you start to alter a big part of the code.
 - **New Features**: please please discuss in a GitHub issue before you start to alter a big part of the code. Without discussion upfront, the pull request will not be accepted / merged.
@@ -57,7 +61,7 @@ Please keep the following in mind:
 The MIT License (MIT)
 =====================
 
-Copyright © 2016 Javier G. Ayala
+Copyright © 2017 Sebastian Hodapp
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
