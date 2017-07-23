@@ -39,12 +39,13 @@ Module.register('MMM-IndoorTemp', {
   getDom: function() {
     var wrapper = document.createElement('div');
 
-    if (!this.loaded) {
-      wrapper.innerHTML = this.config.loadingText;
-      return wrapper;
-    }
-
     if (this.config.debug) {
+
+      if (!this.loaded) {
+        wrapper.innerHTML = this.config.loadingText;
+        return wrapper;
+      }
+
       var titleDiv = document.createElement('div');
       titleDiv.innerHTML = this.config.title;
       wrapper.appendChild(titleDiv);
@@ -68,7 +69,7 @@ Module.register('MMM-IndoorTemp', {
       }
     }
 
-    if (notification === 'ERROR') && (this.config.showAlerts){
+    if (notification === 'ERROR' && this.config.showAlerts){
       this.sendNotification('SHOW_ALERT', payload);
     }
   }
