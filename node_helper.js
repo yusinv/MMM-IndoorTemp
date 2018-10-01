@@ -50,8 +50,16 @@ module.exports = NodeHelper.create({
         }
 
         if (config.mode !== 'send') {
-            client.subscribe(config.tempTopic);
-            client.subscribe(config.humidityTopic);
+            if (config.tempTopic !== '') {
+                client.subscribe(config.tempTopic);
+            }
+            if (config.humidityTopic !== '') {
+                client.subscribe(config.humidityTopic);
+            }
+            if (config.pressureTopic !== '') {
+                client.subscribe(config.pressureTopic);
+            }
+
             client.on('message', function (topic, message) {
                 self.sendSocketNotification('MQTT_DATA', {'topic': topic, 'data': message.toString()});
             });
@@ -61,7 +69,7 @@ module.exports = NodeHelper.create({
     socketNotificationReceived: function (notification, payload) {
         if (notification === 'MQTT_SERVER') {
             this.connectMqtt(payload);
-        } else if (notification == 'MQTT_SEND') {
+        } else if (notification === 'MQTT_SEND') {
             var client = this.clients[payload.mqttServer];
             if (typeof client !== "undefined") {
                 client.publish(payload.topic, JSON.stringify(payload.payload));
