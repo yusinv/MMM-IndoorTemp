@@ -160,7 +160,7 @@ Module.register('MMM-IndoorTemp', {
         }
 
         var self = this;
-        setTimeout(function () {
+        setInterval(function () {
             self.updateDom();
         }, nextLoad);
     }
