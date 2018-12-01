@@ -13,17 +13,9 @@
 Module.register('MMM-IndoorTemp', {
 
     defaults: {
-        mqttServer: 'mqtt://test.mosquitto.org',
-        tempTopic: '',
-        humidityTopic: '',
-        pressureTopic: '',
         updateInterval: 60 * 1000, //every minute
         debug: false,
-        showAlerts: true,
-        //showTitle: false,
-        //tempTitle: 'Indoor Temperature/Humidity',
-        loadingText: 'Loading MQTT Data...',
-        //postTempText: 'C',
+        loadingText: 'Loading Data...',
         decimalSymbol: ".",
         units: config.units,
         degreeLabel: false,
@@ -37,20 +29,12 @@ Module.register('MMM-IndoorTemp', {
 
     start: function () {
         Log.info('Starting module: ' + this.name);
-        this.loaded = false;
-        this.updateMqtt(this);
+        this.tempLoaded = false;
+        this.humLoaded = false;
+        this.pressedLoaded = false;
         this.scheduleUpdate(this.config.updateInterval)
     },
 
-    updateMqtt: function (self) {
-        self.sendSocketNotification('MQTT_SERVER', {
-            mqttServer: self.config.mqttServer,
-            tempTopic: self.config.tempTopic,
-            humidityTopic: self.config.humidityTopic,
-            pressureTopic: self.config.pressureTopic
-        });
-        setTimeout(self.updateMqtt, self.config.updateInterval, self);
-    },
 
     getDom: function () {
         var wrapper = document.createElement('div');
@@ -71,24 +55,24 @@ Module.register('MMM-IndoorTemp', {
         }
 
 
-        if (!this.loaded) {
+        if (!this.tempLoaded && !this.humLoaded && !this.pressedLoaded) {
             wrapper.innerHTML = this.config.loadingText;
             return wrapper;
         }
 
-        if (this.config.tempTopic !== '') {
+        if (this.tempLoaded) {
             var tempDiv = document.createElement('div');
             var weatherIcon = document.createElement("span");
             weatherIcon.className = "wi wi-thermometer";
             tempDiv.appendChild(weatherIcon);
             var indoorTemperatureElem = document.createElement("span");
             //indoorTemperatureElem.className = "bright";
-            indoorTemperatureElem.innerHTML = " " + this.mqttTempVal.replace(".", this.config.decimalSymbol) + "&deg;" + degreeLabel;
+            indoorTemperatureElem.innerHTML = " " + this.tempVal.replace(".", this.config.decimalSymbol) + "&deg;" + degreeLabel;
             tempDiv.appendChild(indoorTemperatureElem);
             wrapper.appendChild(tempDiv);
         }
 
-        if (this.config.humidityTopic !== '') {
+        if (this.humLoaded) {
             var humidityDiv = document.createElement('div');
             var humidityIcon = document.createElement("span");
             humidityIcon.className = "wi wi-humidity";
@@ -100,7 +84,7 @@ Module.register('MMM-IndoorTemp', {
             wrapper.appendChild(humidityDiv);
         }
 
-        if (this.config.pressureTopic !== '') {
+        if (this.pressedLoaded) {
             var pressureDiv = document.createElement('div');
             var pressureIcon = document.createElement("span");
             pressureIcon.className = "wi wi-barometer";
@@ -115,36 +99,32 @@ Module.register('MMM-IndoorTemp', {
         return wrapper;
     },
 
-    socketNotificationReceived: function (notification, payload) {
-        if (notification === 'MQTT_DATA' && payload.topic === this.config.tempTopic) {
-            this.mqttTempVal = payload.data.toString();
-            this.loaded = true;
+    notificationReceived: function (notification, payload, sender) {
+        if (notification == 'MMM_INDOOR_TEMP') {
+            this.tempVal = payload.toString();
+            this.tempLoaded = true;
             //this.sendNotification('INDOOR_TEMPERATURE', this.mqttVal);
             if (this.config.debug) {
                 this.updateDom();
             }
         }
 
-        if (notification === 'MQTT_DATA' && payload.topic === this.config.humidityTopic) {
-            this.mqttHumidityVal = payload.data.toString();
-            this.loaded = true;
+        if (notification == 'MMM_INDOOR_HUMIDITY') {
+            this.mqttHumidityVal = payload.toString();
+            this.humLoaded = true;
             //this.sendNotification('INDOOR_HUMIDITY', this.mqttVal);
             if (this.config.debug) {
                 this.updateDom();
             }
         }
 
-        if (notification === 'MQTT_DATA' && payload.topic === this.config.pressureTopic) {
-            this.mqttPressureVal = payload.data.toString();
-            this.loaded = true;
+        if (notification == 'MMM_INDOOR_PRESSURE') {
+            this.mqttPressureVal = payload.toString();
+            this.pressedLoaded = true;
             //this.sendNotification('INDOOR_HUMIDITY', this.mqttVal);
             if (this.config.debug) {
                 this.updateDom();
             }
-        }
-
-        if (notification === 'ERROR' && this.config.showAlerts) {
-            this.sendNotification('SHOW_ALERT', payload);
         }
     },
 
